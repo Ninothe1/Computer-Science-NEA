@@ -8,7 +8,7 @@ public class MainGame{
         gameFrame = new JFrame();
         gameFrame.setVisible(true);
         gameFrame.setResizable(false);
-        gameFrame.setTitle("Astrea's Reincarnation");
+        gameFrame.setTitle("Astrea's ReincarnationZ");
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null);
 
