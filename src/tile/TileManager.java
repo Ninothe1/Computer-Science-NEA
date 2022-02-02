@@ -3,6 +3,7 @@ package tile;
 import mainGame.GamePanel;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,14 +19,15 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10];
-        getTileImage();
         mapTileNum = new int[gp.screenCol][gp.screenRow];
+        getTileImage();
+        loadMap();
 
     }
 
     public void loadMap(){
         try{
-            InputStream is = getClass().getResourceAsStream("map/Map-01.txt");
+            InputStream is = getClass().getResourceAsStream("/map/Map-01.txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
@@ -35,9 +37,11 @@ public class TileManager {
                 String line = br.readLine();
 
                 while(col < gp.screenCol){
-                    String numbers[] = line.split("  ");
+                    String[] numbers = line.split(" ");
+                    System.out.println(numbers);
 
                     int num = Integer.parseInt(numbers[col]);
+                    System.out.println("Number Parsed in" + num);
 
                     mapTileNum[col][row] = num;
                     col++;
@@ -50,7 +54,7 @@ public class TileManager {
             br.close();
 
         }catch(Exception e){
-
+            e.printStackTrace();
 
         }
     }
@@ -74,12 +78,13 @@ public class TileManager {
     }
 
     public static void draw (Graphics2D g2) {
-        int row = 0;
         int col = 0;
+        int row = 0;
         int x = 0;
         int y = 0;
 
         while(col < gp.screenCol && row < gp.screenRow){
+
             int tileNum = mapTileNum[col][row];
 
             g2.drawImage(tile[tileNum].image, x, y, gp.tileSize,gp.tileSize,null);

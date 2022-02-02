@@ -14,9 +14,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     final int originTileSize = 16; //The Size of the tiles, or grids
     final int scale = 3;
     public final int tileSize = originTileSize * scale; //Making the tile size
-    public final int screenCol = 10;
+    public final int screenCol = 12;
     public final int screenRow = 12;
-    final int screenHeight = screenCol * tileSize; //480 pixels
+    final int screenHeight = screenCol * tileSize; //576 pixels
     final int screenWidth = screenRow * tileSize; //576 pixels
     int FPS = 60; //Frames Per Second of the Game
     public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false;
@@ -95,9 +95,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        tileM.draw(g2);
+        TileManager.draw(g2);
 
-        player.draw(g2);
+        PlayableCharacter.draw(g2);
 
 
 
@@ -132,15 +132,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         int code = e.getKeyCode();
         if(code == KeyEvent.VK_W) {
             upPressed = false;
+            PlayableCharacter.spriteNum = 1;
         }
         else if(code == KeyEvent.VK_A) {
             leftPressed = false;
+            PlayableCharacter.spriteNum = 1;
         }
         else if(code == KeyEvent.VK_D) {
             rightPressed = false;
+            PlayableCharacter.spriteNum = 1;
         }
         else if(code == KeyEvent.VK_S) {
             downPressed = false;
+            PlayableCharacter.spriteNum = 1;
         }
         //key listener listens out for when key is released and does accordingly
 
