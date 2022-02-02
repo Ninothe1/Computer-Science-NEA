@@ -1,6 +1,7 @@
 package mainGame;
 
 import entity.PlayableCharacter;
+import tile.TileManager;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -13,14 +14,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     final int originTileSize = 16; //The Size of the tiles, or grids
     final int scale = 3;
     public final int tileSize = originTileSize * scale; //Making the tile size
-    final int screenCol = 10;
-    final int screenRow = 12;
+    public final int screenCol = 10;
+    public final int screenRow = 12;
     final int screenHeight = screenCol * tileSize; //480 pixels
     final int screenWidth = screenRow * tileSize; //576 pixels
     int FPS = 60; //Frames Per Second of the Game
     public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false;
 
     Thread gameThread;
+    PlayableCharacter player = new PlayableCharacter(this);
+    TileManager tileM = new TileManager(this);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -39,7 +42,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         //Puts everything in the Class into the thread
         gameThread.start();
         //automatically calls the run method
-        PlayableCharacter player = new PlayableCharacter(this);
     }
 
 
@@ -93,7 +95,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        PlayableCharacter.draw(g2);
+        tileM.draw(g2);
+
+        player.draw(g2);
+
+
 
         g2.dispose();
     }
@@ -106,19 +112,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if(code == KeyEvent.VK_W){
-            System.out.println("Press W");
             upPressed = true;
         }
         else if(code == KeyEvent.VK_A) {
-            System.out.println("Pressed A");
             leftPressed = true;
         }
         else if(code == KeyEvent.VK_D) {
-            System.out.println("Pressed D");
             rightPressed = true;
         }
         else if(code == KeyEvent.VK_S) {
-            System.out.println("Pressed S");
             downPressed = true;
         }
         //key listener listens out for when key is pressed and does accordingly
@@ -128,7 +130,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
-        System.out.println(code);
         if(code == KeyEvent.VK_W) {
             upPressed = false;
         }
