@@ -10,15 +10,21 @@ import java.io.IOException;
 public class PlayableCharacter extends Entity{
     static GamePanel gp;
 
+    public static int screenX;
+    public static int screenY;
+
     public PlayableCharacter(GamePanel gp){
         this.gp = gp;
+
+        screenX = (gp.screenWidth/2) - (gp.tileSize/2);
+        screenY = (gp.screenHeight/2) - (gp.tileSize/2);
 
         setDefaultValues();
         getPlayerImage();
     }
     public void setDefaultValues(){
-        x = 100; //starting x position
-        y = 100; //starting y position
+        worldX = gp.tileSize * 23; //starting x position
+        worldY = gp.tileSize * 21; //starting y position
         speed = 4; //how many pixels it moves per interval
         direction = "down"; //default direction its looking
         //set default variable such as players, x and y, speeds and the default direction they look at
@@ -45,19 +51,19 @@ public class PlayableCharacter extends Entity{
 
         if(gp.upPressed == true){
             direction = "up";
-            y -= speed;
+            worldY -= speed;
         }
         else if(gp.downPressed == true){
             direction = "down";
-            y += speed;
+            worldY += speed;
         }
         else if(gp.rightPressed == true){
             direction = "right";
-            x += speed;
+            worldX += speed;
         }
         else if(gp.leftPressed == true){
             direction = "left";
-            x -= speed;
+            worldX -= speed;
         }
         //when the keys are pressed, the player will move or it's position will change accordingly
         if(gp.upPressed||gp.downPressed||gp.leftPressed||gp.rightPressed){
@@ -116,7 +122,7 @@ public class PlayableCharacter extends Entity{
                 }
                 break;
         }
-        g2.drawImage(image, x , y , gp.tileSize ,gp.tileSize, null);
+        g2.drawImage(image, screenX , screenY , gp.tileSize ,gp.tileSize, null);
 
     }
 

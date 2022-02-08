@@ -11,18 +11,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
+    //SCREEN SETTINGS
     final int originTileSize = 16; //The Size of the tiles, or grids
     final int scale = 3;
+
     public final int tileSize = originTileSize * scale; //Making the tile size
     public final int screenCol = 12;
     public final int screenRow = 12;
-    final int screenHeight = screenCol * tileSize; //576 pixels
-    final int screenWidth = screenRow * tileSize; //576 pixels
+    public final int screenHeight = screenCol * tileSize; //576 pixels
+    public final int screenWidth = screenRow * tileSize; //576 pixels
+
+    //WORLD SETTINGS
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize*maxWorldCol;
+    public final int worldLength =tileSize*maxWorldRow;
+
     int FPS = 60; //Frames Per Second of the Game
     public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false;
 
     Thread gameThread;
-    PlayableCharacter player = new PlayableCharacter(this);
+    public PlayableCharacter player = new PlayableCharacter(this);
     TileManager tileM = new TileManager(this);
 
     public GamePanel(){

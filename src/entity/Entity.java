@@ -6,6 +6,7 @@ public class Entity {
     public static int x;
     public static int y;
     public static int speed;
+    public static int worldX, worldY;
     public static BufferedImage up1;
     public static BufferedImage up2;
     public static BufferedImage left1;
