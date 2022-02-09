@@ -10,6 +10,7 @@ import java.io.IOException;
 public class PlayableCharacter extends Entity{
     static GamePanel gp;
 
+
     public static int screenX;
     public static int screenY;
 
@@ -19,12 +20,18 @@ public class PlayableCharacter extends Entity{
         screenX = (gp.screenWidth/2) - (gp.tileSize/2);
         screenY = (gp.screenHeight/2) - (gp.tileSize/2);
 
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+
         setDefaultValues();
         getPlayerImage();
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 23; //starting x position
-        worldY = gp.tileSize * 21; //starting y position
+        worldX = gp.tileSize * 2; //starting x position
+        worldY = gp.tileSize * 2; //starting y position
         speed = 4; //how many pixels it moves per interval
         direction = "down"; //default direction its looking
         //set default variable such as players, x and y, speeds and the default direction they look at
@@ -48,23 +55,46 @@ public class PlayableCharacter extends Entity{
 
         }
     public static void update(){
+        if(gp.upPressed || gp.downPressed || gp.rightPressed || gp.leftPressed){
+            if(gp.upPressed == true){
+                direction = "up";
+            }
+            else if(gp.downPressed == true){
+                direction = "down";
+            }
+            else if(gp.rightPressed == true){
+                direction = "right";
+            }
+            else if(gp.leftPressed == true){
+                direction = "left";
+            }
 
-        if(gp.upPressed == true){
-            direction = "up";
-            worldY -= speed;
+
+
+            collisionOn = false;
+            gp.cCheck.checkTile(gp.player);
+
+            if(collisionOn == false){
+                switch(direction){
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+
+                }
+            }
         }
-        else if(gp.downPressed == true){
-            direction = "down";
-            worldY += speed;
-        }
-        else if(gp.rightPressed == true){
-            direction = "right";
-            worldX += speed;
-        }
-        else if(gp.leftPressed == true){
-            direction = "left";
-            worldX -= speed;
-        }
+
+
+
         //when the keys are pressed, the player will move or it's position will change accordingly
         if(gp.upPressed||gp.downPressed||gp.leftPressed||gp.rightPressed){
             spriteCounter++;

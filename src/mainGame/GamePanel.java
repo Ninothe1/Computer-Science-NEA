@@ -30,9 +30,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     int FPS = 60; //Frames Per Second of the Game
     public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false;
 
-    Thread gameThread;
-    public PlayableCharacter player = new PlayableCharacter(this);
     TileManager tileM = new TileManager(this);
+    Thread gameThread;
+    public CollisionCheck cCheck = new CollisionCheck(this);
+    public PlayableCharacter player = new PlayableCharacter(this);
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

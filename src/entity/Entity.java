@@ -1,10 +1,11 @@
 package entity;
 
+import mainGame.GamePanel;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity {
-    public static int x;
-    public static int y;
     public static int speed;
     public static int worldX, worldY;
     public static BufferedImage up1;
@@ -18,6 +19,8 @@ public class Entity {
     public static String direction;
     public static int spriteCounter = 0;
     public static int spriteNum = 1;
+    public Rectangle solidArea;
+    public static boolean collisionOn = false;
 
 
 
