@@ -71,22 +71,22 @@ public class TileManager {
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_brick.png"));
             tile[2].collision = true;
 
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_pavement.png"));
+
             tile[4] = new Tile();
-            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_pavement.png"));
+            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_rooftop.png"));
+            tile[4].collision = true;
 
             tile[5] = new Tile();
-            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_rooftop.png"));
-            tile[5].collision = true;
+            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_concreteb.png"));
 
             tile[6] = new Tile();
-            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_concreteb.png"));
+            tile[6].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_concretey.png"));
 
             tile[7] = new Tile();
-            tile[7].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_concretey.png"));
-
-            tile[8] = new Tile();
-            tile[8].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_black.png"));
-            tile[8].collision = true;
+            tile[7].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tile_black.png"));
+            tile[7].collision = true;
 
         } catch (IOException e) {
             e.printStackTrace();

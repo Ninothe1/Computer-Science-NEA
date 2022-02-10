@@ -30,8 +30,8 @@ public class PlayableCharacter extends Entity{
         getPlayerImage();
     }
     public void setDefaultValues(){
-        worldX = gp.tileSize * 2; //starting x position
-        worldY = gp.tileSize * 2; //starting y position
+        worldX = gp.tileSize * 7; //starting x position
+        worldY = gp.tileSize * 7; //starting y position
         speed = 4; //how many pixels it moves per interval
         direction = "down"; //default direction its looking
         //set default variable such as players, x and y, speeds and the default direction they look at
