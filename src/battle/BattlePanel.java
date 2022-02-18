@@ -89,25 +89,26 @@ public class BattlePanel {
 
         //ENEMY HP AND SP
 
-        double enemyHealthBar = 160 * (currentEnemyHP / Enemy.healthPoints);
-        double enemyStamina = 160 * (currentEnemySP / Enemy.staminaPoints);
+        double scale1 = currentEnemyHP / Enemy.healthPoints;
+        double scale2 = currentEnemySP / Enemy.staminaPoints;
+
+
 
         //HP
+        System.out.println(scale1);
+        System.out.println(scale2);
         g2.setColor(new Color(35, 35, 35));
         g2.fillRect(10, 10, 166, 26);
 
-        System.out.println("Here is your CEHP"+currentEnemyHP);
-        System.out.println("Here is EHP"+Enemy.healthPoints);
-        System.out.println("Here is length of health bar,"+enemyHealthBar);
         g2.setColor(new Color(255, 0, 30));
-        g2.fillRect(13, 13, (int) enemyHealthBar, 20);
+        g2.fillRect(13, 13, (int)(160*scale1), 20);
 
         //SP
         g2.setColor(new Color(35, 35, 35));
         g2.fillRect(10, 40, 166, 26);
 
         g2.setColor(new Color(30, 0, 255));
-        g2.fillRect(13, 43, (int) enemyStamina, 20);
+        g2.fillRect(13, 43, (int)(160*scale2), 20);
 
         //Player Menu
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
@@ -293,7 +294,7 @@ public class BattlePanel {
                 currentEnemyHP -= playerDamage;
                 playerDamage = 0;
 
-                while(counter < 500){
+                while(counter < 1000){
                     g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20F));
                     if(enemyAction == 4){
                         g2.drawString(actionText + "It was defended against well", 40, 505);
@@ -316,7 +317,7 @@ public class BattlePanel {
                     enemyDamage /= 5;
                 }
                 currentPlayerHP -= enemyDamage;
-                while(counter < 500){
+                while(counter < 1000){
                     g2.drawString(enemyActionText, 40, 515);
                     counter++;
                 }
