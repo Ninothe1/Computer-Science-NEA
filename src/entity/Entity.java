@@ -21,6 +21,9 @@ public class Entity {
     public static int spriteNum = 1;
     public Rectangle solidArea;
     public static boolean collisionOn = false;
+    public static int healthPoints;
+    public static int staminaPoints;
+    public static String weakness;
 
 
 

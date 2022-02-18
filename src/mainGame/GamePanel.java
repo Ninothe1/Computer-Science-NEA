@@ -1,5 +1,6 @@
 package mainGame;
 
+import battle.BattlePanel;
 import entity.PlayableCharacter;
 import tile.TileManager;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.Key;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     //SCREEN SETTINGS
@@ -28,12 +30,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public final int worldLength =tileSize*maxWorldRow;
 
     int FPS = 60; //Frames Per Second of the Game
-    public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false;
+    public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false, pPressed = false, enterPressed = false;
 
     TileManager tileM = new TileManager(this);
     Thread gameThread;
     public CollisionCheck cCheck = new CollisionCheck(this);
+
     public PlayableCharacter player = new PlayableCharacter(this);
+
+    public BattlePanel battle = new BattlePanel(this);
+
+    public int gameState;
+    public final int roamState = 1;
+    public final int fightState = 2;
+    public final int pauseState = 3;
+
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -44,6 +55,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         this.requestFocus();
 
         //Changes the frame so the panel comes out like this
+
+    }
+
+    public void setUpGame(){
+        gameState = fightState;
 
     }
 
@@ -96,7 +112,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
     private void update() {
 
-        PlayableCharacter.update();
+        if(gameState == roamState){
+            player.update();
+        }
+        if(gameState == fightState){
+            battle.update();
+        }
+
+
 
         // this is constantly being updated so it stimulates movement as the key is repeatedly being pressed
     }
@@ -105,11 +128,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        TileManager.draw(g2);
-
-        PlayableCharacter.draw(g2);
-
-
+        if(gameState == roamState){
+            tileM.draw(g2);
+            player.draw(g2);
+        }
+        else if(gameState == fightState){
+            battle.drawBackground(g2);
+            battle.draw(g2);
+        }
 
         g2.dispose();
     }
@@ -121,18 +147,73 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if(code == KeyEvent.VK_W){
-            upPressed = true;
+        if(gameState == fightState){
+            if(code == KeyEvent.VK_W){
+                battle.commandNum ++;
+                if(battle.commandNum == 4){
+                    battle.commandNum = 0;
+                }
+                else if(battle.commandNum2 == 1 && battle.commandNum == 2){
+                    battle.commandNum = 0;
+                }
+            }
+            else if(code == KeyEvent.VK_S){
+                battle.commandNum --;
+                if(battle.commandNum == -1 && battle.commandNum2 == 0){
+                    battle.commandNum = 3;
+                }
+                if(battle.commandNum2 == 1 && battle.commandNum ==-1){
+                    battle.commandNum = 1;
+                }
+            }
+            else if(code == KeyEvent.VK_ENTER){
+                if(battle.commandNum == 0 && battle.commandNum2 == 0 && battle.commandNum3 == 0){
+                    battle.commandNum2 ++;
+                }
+                else if(battle.commandNum == 2 && battle.commandNum3 == 0){
+                    battle.commandNum3 ++;
+                }
+                else if(battle.commandNum2 == 1 || battle.commandNum3 == 1 || battle.commandNum == 1 || battle.commandNum == 3){
+                    battle.selected ++;
+                    if(battle.selected == 2){
+                        battle.selected =1;
+                    }
+                }
+
+
+
+            }
+            else if(code == KeyEvent.VK_BACK_SPACE){
+                if(battle.commandNum2 == 1){
+                    battle.commandNum2 = 0;
+                    battle.commandNum = 0;
+                }
+                else if(battle.commandNum3 == 1){
+                    battle.commandNum3 = 0;
+                    battle.commandNum = 2;
+                }
+            }
         }
-        else if(code == KeyEvent.VK_A) {
-            leftPressed = true;
+
+        if(gameState == roamState){
+            if(code == KeyEvent.VK_W){
+                upPressed = true;
+            }
+            else if(code == KeyEvent.VK_A) {
+                leftPressed = true;
+            }
+            else if(code == KeyEvent.VK_D) {
+                rightPressed = true;
+            }
+            else if(code == KeyEvent.VK_S) {
+                downPressed = true;
+            }
+            else if(code == KeyEvent.VK_P){
+                pPressed = true;
+                System.out.println("P is pressed");
+            }
         }
-        else if(code == KeyEvent.VK_D) {
-            rightPressed = true;
-        }
-        else if(code == KeyEvent.VK_S) {
-            downPressed = true;
-        }
+
         //key listener listens out for when key is pressed and does accordingly
 
     }
@@ -155,6 +236,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         else if(code == KeyEvent.VK_S) {
             downPressed = false;
             PlayableCharacter.spriteNum = 1;
+        }
+        else if(code == KeyEvent.VK_P){
+            pPressed = false;
         }
         //key listener listens out for when key is released and does accordingly
 

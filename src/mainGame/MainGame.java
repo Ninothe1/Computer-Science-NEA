@@ -18,6 +18,7 @@ public class MainGame{
         gamepanel.requestFocusInWindow();
 
 
+        gamepanel.setUpGame();
         gamepanel.startGameThread();
 
     }
