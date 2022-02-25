@@ -163,7 +163,6 @@ public class LoginScreen implements ActionListener {
                     ps.close();
                     con.close();
 
-
                 } catch (SQLException d) {
                     System.out.print(d.toString());
                 }

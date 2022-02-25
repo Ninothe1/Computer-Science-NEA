@@ -15,10 +15,10 @@ public class BattlePanel {
     public static BufferedImage backgroundIcon;
     public static BufferedImage backPlayer;
     public static BufferedImage backSpirit;
-    public static int currentPlayerHP = PlayableCharacter.healthPoints;
-    public static int currentEnemyHP = Enemy.healthPoints;
-    public static int currentPlayerSP = PlayableCharacter.staminaPoints;
-    public static int currentEnemySP = Enemy.staminaPoints;
+    public static int currentPlayerHP = 100;
+    public static int currentEnemyHP = 70;
+    public static int currentPlayerSP = 100;
+    public static int currentEnemySP = 100;
     public int commandNum = 0, commandNum2 = 0, commandNum3 = 0, selected = 0;
     int playerDamage = 0;
     int playerStaminaCon = 0;
@@ -28,6 +28,10 @@ public class BattlePanel {
     boolean defence;
     boolean turn = true;
     int counter;
+    int soundAction;
+    boolean battleActive = true;
+    public boolean win = false;
+    public boolean loose = false;
 
 
 
@@ -53,281 +57,323 @@ public class BattlePanel {
     }
 
     public void update() {
-        if (gp.pPressed) {
-            currentPlayerHP -= 10;
-        }
     }
 
     public void draw(Graphics2D g2) {
-        //PLAYER DRAWING
-        g2.drawImage(backPlayer, 40, 277, 181, 176, null);
+        if(battleActive) {
+            //PLAYER DRAWING
+            g2.drawImage(backPlayer, 40, 277, 181, 176, null);
 
 
+            //PLAYER HP AND SP
+
+            double healthBar = 160 * ((double) currentPlayerHP / (double) (100));
+            double spBar = 160 * ((double) currentPlayerSP / (double) (100));
 
 
-        //PLAYER HP AND SP
+            //HP
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(400, 350, 166, 26);
 
-        double healthBar = 160 * (currentPlayerHP / PlayableCharacter.healthPoints);
-        double spBar = 160 * (currentEnemySP / Enemy.staminaPoints);
+            g2.setColor(new Color(255, 0, 30));
+            g2.fillRect(403, 353, (int) healthBar, 20);
 
-        //HP
-        g2.setColor(new Color(35, 35, 35));
-        g2.fillRect(400, 350, 166, 26);
+            //SP
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(400, 380, 166, 26);
 
-        g2.setColor(new Color(255, 0, 30));
-        g2.fillRect(403, 353, (int) healthBar, 20);
+            g2.setColor(new Color(30, 0, 255));
+            g2.fillRect(403, 383, 160, 20);
 
-        //SP
-        g2.setColor(new Color(35, 35, 35));
-        g2.fillRect(400, 380, 166, 26);
+            //ENEMY DRAWING
+            g2.drawImage(enemy[0].image, 300, 60, 181, 176, null);
 
-        g2.setColor(new Color(30, 0, 255));
-        g2.fillRect(403, 383, 160, 20);
+            //ENEMY HP AND SP
 
-        //ENEMY DRAWING
-        g2.drawImage(enemy[0].image, 300, 60, 181, 176, null);
-
-        //ENEMY HP AND SP
-
-        double scale1 = currentEnemyHP / Enemy.healthPoints;
-        double scale2 = currentEnemySP / Enemy.staminaPoints;
+            double enemyHealthBar = 160 * ((double) currentEnemyHP / (double) (70));
+            double enemySpBar = 160 * ((double) currentEnemySP / (double) (100));
 
 
+            //HP
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(10, 10, 166, 26);
 
-        //HP
-        System.out.println(scale1);
-        System.out.println(scale2);
-        g2.setColor(new Color(35, 35, 35));
-        g2.fillRect(10, 10, 166, 26);
+            g2.setColor(new Color(255, 0, 30));
+            g2.fillRect(13, 13, (int) enemyHealthBar, 20);
 
-        g2.setColor(new Color(255, 0, 30));
-        g2.fillRect(13, 13, (int)(160*scale1), 20);
+            //SP
+            g2.setColor(new Color(35, 35, 35));
+            g2.fillRect(10, 40, 166, 26);
 
-        //SP
-        g2.setColor(new Color(35, 35, 35));
-        g2.fillRect(10, 40, 166, 26);
+            g2.setColor(new Color(30, 0, 255));
+            g2.fillRect(13, 43, (int) enemySpBar, 20);
 
-        g2.setColor(new Color(30, 0, 255));
-        g2.fillRect(13, 43, (int)(160*scale2), 20);
+            //Player Menu
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
 
-        //Player Menu
-        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+            String text;
+            int x;
+            int y;
 
-        String text;
-        int x;
-        int y;
-
-        if(selected == 0){
-            if(commandNum2 == 0 && commandNum3 == 0){
-                text = "FIGHT";
-                x = 40;
-                y = 505;
-                g2.drawString(text, x, y);
-                if (commandNum == 0) {
-                    g2.drawString(">", x - 25, y);
-
-                }
-            }
-            if (commandNum2 == 1) {
-                text = "KNIFE";
-                x = 40;
-                y = 505;
-                g2.drawString(text, x, y);
-                if (commandNum == 0) {
-                    g2.drawString(">", x - 25, y);
-                }
-                text = "GUN";
-                x = 40;
-                y = 565;
-                g2.drawString(text, x, y);
-                if (commandNum == 1) {
-                    g2.drawString(">", x - 25, y);
-
-                }
-
-            }
-
-            if(commandNum2 == 0 && commandNum3 == 0){
-                text = "DEFEND";
-                x = 40;
-                y = 565;
-                g2.drawString(text, x, y);
-                if (commandNum == 1) {
-                    g2.drawString(">", x - 25, y);
-                    if (commandNum == 1 && gp.enterPressed) {
+            if (selected == 0) {
+                if (commandNum2 == 0 && commandNum3 == 0) {
+                    text = "FIGHT";
+                    x = 40;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 0) {
+                        g2.drawString(">", x - 25, y);
 
                     }
                 }
-            }
-
-
-            if(commandNum2 == 0 && commandNum3 == 0){
-                text = "SPIRIT";
-                x = 390;
-                y = 505;
-                g2.drawString(text, x, y);
-                if (commandNum == 2) {
-                    g2.drawString(">", x - 25, y);
-                    if (commandNum == 2 && gp.enterPressed) {
+                if (commandNum2 == 1) {
+                    text = "KNIFE";
+                    x = 40;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 0) {
+                        g2.drawString(">", x - 25, y);
+                    }
+                    text = "GUN";
+                    x = 40;
+                    y = 565;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 1) {
+                        g2.drawString(">", x - 25, y);
 
                     }
-                }
-            }
-            if(commandNum3 == 1){
-                text = "GIGAPUNCH";
-                x = 40;
-                y = 505;
-                g2.drawString(text, x, y);
-                if (commandNum == 0) {
-                    g2.drawString(">", x - 25, y);
-
-
-                }
-                text = "DIVEKICK";
-                x = 40;
-                y = 565;
-                g2.drawString(text, x, y);
-                if (commandNum == 1) {
-                    g2.drawString(">", x - 25, y);
-
-                }
-                text = "FLAMEFIST";
-                x = 320;
-                y = 505;
-                g2.drawString(text, x, y);
-                if (commandNum == 2) {
-                    g2.drawString(">", x - 25, y);
-
-
-                }
-                text = "DARKFIST";
-                x = 320;
-                y = 565;
-                g2.drawString(text, x, y);
-                if (commandNum == 3) {
-                    g2.drawString(">", x - 25, y);
 
                 }
 
+                if (commandNum2 == 0 && commandNum3 == 0) {
+                    text = "DEFEND";
+                    x = 40;
+                    y = 565;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 1) {
+                        g2.drawString(">", x - 25, y);
+                        if (commandNum == 1 && gp.enterPressed) {
 
-            }
+                        }
+                    }
+                }
 
-            if(commandNum2 == 0  && commandNum3 == 0){
-                text = "RUN";
-                x = 390;
-                y = 565;
-                g2.drawString(text, x, y);
-                if (commandNum == 3) {
-                    g2.drawString(">", x - 25, y);
-                    if (commandNum == 3 && gp.enterPressed) {
+
+                if (commandNum2 == 0 && commandNum3 == 0) {
+                    text = "SPIRIT";
+                    x = 390;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 2) {
+                        g2.drawString(">", x - 25, y);
+                        if (commandNum == 2 && gp.enterPressed) {
+
+                        }
+                    }
+                }
+                if (commandNum3 == 1) {
+                    text = "GIGAPUNCH";
+                    x = 40;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 0) {
+                        g2.drawString(">", x - 25, y);
+
 
                     }
+                    text = "DIVEKICK";
+                    x = 40;
+                    y = 565;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 1) {
+                        g2.drawString(">", x - 25, y);
+
+                    }
+                    text = "FLAMEFIST";
+                    x = 320;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 2) {
+                        g2.drawString(">", x - 25, y);
+
+
+                    }
+                    text = "FROSTFIST";
+                    x = 320;
+                    y = 565;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 3) {
+                        g2.drawString(">", x - 25, y);
+
+                    }
+
+
+                }
+
+                if (commandNum2 == 0 && commandNum3 == 0) {
+                    text = "RUN";
+                    x = 390;
+                    y = 565;
+                    g2.drawString(text, x, y);
+                    if (commandNum == 3) {
+                        g2.drawString(">", x - 25, y);
+                        if (commandNum == 3 && gp.enterPressed) {
+
+                        }
+                    }
+
+                }
+
+            }
+            if (selected == 1) {
+                if (commandNum2 == 1 && commandNum == 0) {
+                    playerDamage = 9;
+                    playerStaminaCon = 5;
+                    playerDamageType = "normal";
+                    actionText = "You slash your opponent across the chest";
+                    soundAction = 5;
+
+
+                } else if (commandNum2 == 1 && commandNum == 1) {
+                    playerDamage = 5;
+                    playerStaminaCon = 5;
+                    playerDamageType = "anti-sky";
+                    actionText = "You aim and let it rain";
+                    soundAction = 6;
+                } else if (commandNum3 == 1 && commandNum == 0) {
+                    playerDamage = 20;
+                    playerStaminaCon = 5;
+                    playerDamageType = "normal";
+                    actionText = "Your spirit manifests unleashing a destructive strike";
+                    soundAction = 7;
+
+                } else if (commandNum3 == 1 && commandNum == 1) {
+                    playerDamage = 12;
+                    playerStaminaCon = 5;
+                    playerDamageType = "anti-sky";
+                    actionText = "Your spirit manifests in the skies coming down for a kick";
+                    soundAction = 8;
+
+                } else if (commandNum3 == 1 && commandNum == 2) {
+                    playerDamage = 15;
+                    playerStaminaCon = 5;
+                    playerDamageType = "fire";
+                    actionText = "Your spirit manifests and unleashes and enflamed fist";
+                    soundAction = 9;
+
+                } else if (commandNum3 == 1 && commandNum == 3) {
+                    playerDamage = 15;
+                    playerStaminaCon = 5;
+                    playerDamageType = "cold";
+                    actionText = "Your spirit manifests and unleashes a ice clad fist";
+                    soundAction = 10;
+
+                } else if (commandNum == 1) {
+                    defence = true;
+                    actionText = "Your spirit manifests, crossing it's arms to protect you";
+                } else if (commandNum == 3) {
+                    selected--;
+                    actionText = "You can not run!";
+
+                }
+
+                Random rand = new Random();
+                int enemyAction = rand.nextInt(5);
+
+                if (commandNum2 == 1 || commandNum3 == 1) {
+                    if (playerDamageType == Enemy.weakness) {
+                        playerDamage *= 1.2;
+                    }
+
+                    if (enemyAction == 4) {
+                        playerDamage /= 5;
+                    }
+
+                    System.out.println(playerDamage);
+
+                    currentEnemyHP -= playerDamage;
+                    gp.playSE(soundAction);
+                    playerDamage = 0;
+
+                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20F));
+
+                    System.out.println(currentEnemyHP);
+                }
+
+                enemyDamage = Enemy.enemyAttacks[enemyAction];
+                String enemyActionText = Enemy.enemyActions[enemyAction];
+                if (enemyAction == 0 || enemyAction == 1 || enemyAction == 2 || enemyAction == 3) {
+
+                    if (commandNum == 1) {
+                        enemyDamage /= 5;
+                    }
+                    System.out.println(enemyDamage);
+                    currentPlayerHP -= enemyDamage;
+                    while (counter < 15000) {
+                        g2.drawString(enemyActionText, 40, 515);
+                        counter++;
+                    }
+                    counter = 0;
+                    System.out.println(currentPlayerHP);
+                }
+
+                commandNum = 0;
+                commandNum2 = 0;
+                commandNum3 = 0;
+                selected = 0;
+
+                if(currentEnemyHP < 0 || currentPlayerHP < 0){
+                    if(currentPlayerHP > 0){
+                        loose = false;
+                    }else if(currentEnemyHP > 0){
+                        win = true;
+                    }
+                    battleActive = false;
+
+
                 }
 
             }
 
         }
-        if(selected == 1){
-            if(commandNum2 == 1 && commandNum == 0){
-                playerDamage = 9;
-                playerStaminaCon = 5;
-                playerDamageType = "normal";
-                actionText = "You run over and slash your opponent across the chest";
+        else{
+            gp.stopMusic();
 
-            }
-            else if(commandNum2 == 1 && commandNum == 1){
-                playerDamage = 5;
-                playerStaminaCon = 5;
-                playerDamageType = "anti-sky";
-                actionText = "You aim your gun towards your opponent and pull down on the trigger of your pistol";
-            }
-            else if(commandNum3 == 1 && commandNum == 0){
-                playerDamage = 20;
-                playerStaminaCon = 5;
-                playerDamageType = "normal";
-                actionText = "Your spirit manifests and reels back it's fist before unleashing a destructive strike";
+            while (gp.enterPressed = false){
+                if(win){
+                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 60F));
+                    String text;
+                    int x;
+                    int y;
+                    text = "YOU WON, YOU GOT 15 XP";
+                    x = 40;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    commandNum = 0;
+                    commandNum2 = 0;
+                    commandNum3 = 0;
 
-            }
-            else if(commandNum3 == 1 && commandNum == 1){
-                playerDamage = 12;
-                playerStaminaCon = 5;
-                playerDamageType = "anti-sky";
-                actionText = "Your spirit manifests and leaps up before falling down as to deliver and a destructive strike";
 
-            }
-            else if(commandNum3 == 1 && commandNum == 2){
-                playerDamage = 15;
-                playerStaminaCon = 5;
-                playerDamageType = "fire";
-                actionText = "Your spirit manifests and reels it's arm back before sending forward and enflamed fist";
+                }
+                else if(loose){
+                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 60F));
+                    String text;
+                    int x;
+                    int y;
+                    text = "YOU LOOSE, SORRY";
+                    x = 40;
+                    y = 505;
+                    g2.drawString(text, x, y);
+                    commandNum = 0;
+                    commandNum2 = 0;
+                    commandNum3 = 0;
 
-            }
-            else if(commandNum3 == 1 && commandNum == 3){
-                playerDamage = 15;
-                playerStaminaCon = 5;
-                playerDamageType = "cold";
-                actionText = "Your spirit manifests and reels it's arm back before sending forward a freezing fist";
-
-            }
-            else if(commandNum == 1){
-                defence = true;
-                actionText = "Your spirit manifests, crossing it's arms to protect you";
-            }
-            else if(commandNum == 3){
-                selected --;
-                actionText = "You can not run!";
-
-            }
-
-            Random rand = new Random();
-            int enemyAction = rand.nextInt(5);
-
-            if(commandNum2 == 1 || commandNum3 == 1){
-                if(playerDamageType == Enemy.weakness){
-                    playerDamage *= 1.2;
                 }
 
-                if(enemyAction == 4){
-                    playerDamage /= 5;
-                }
-
-                currentEnemyHP -= playerDamage;
-                playerDamage = 0;
-
-                while(counter < 1000){
-                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20F));
-                    if(enemyAction == 4){
-                        g2.drawString(actionText + "It was defended against well", 40, 505);
-                    }
-                    else{
-                        g2.drawString(actionText, 40, 505);
-                    }
-                    counter++;
-                }
 
             }
-            counter = 0;
 
-
-            enemyDamage = Enemy.enemyAttacks[enemyAction];
-            String enemyActionText = Enemy.enemyActions[enemyAction];
-            if(enemyAction > 4){
-
-                if(commandNum == 1){
-                    enemyDamage /= 5;
-                }
-                currentPlayerHP -= enemyDamage;
-                while(counter < 1000){
-                    g2.drawString(enemyActionText, 40, 515);
-                    counter++;
-                }
-                counter =0;
-            }
-
-            commandNum =0;
-            commandNum2=0;
-            commandNum3=0;
-            selected = 0;
+            gp.gameState = 1;
         }
 
     }
@@ -336,4 +382,3 @@ public class BattlePanel {
 
     }
 }
-

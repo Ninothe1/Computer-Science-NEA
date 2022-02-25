@@ -1,9 +1,13 @@
 package loginAndStart;
 
+import mainGame.MainGame;
+import mainGame.GamePanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 
 public class StartScreen implements ActionListener{
@@ -19,37 +23,53 @@ public class StartScreen implements ActionListener{
     private ImageIcon backgroundIcon2;
     private JLabel background2;
     private JButton back;
-
+    public static MainGame mainGame;
+    GamePanel gp = new GamePanel();
 
     public StartScreen(){
+
+        gp.playMusic(11);
         startScreen = new JFrame();
 
         panel = new JPanel();
         panel.setVisible(true);
 
-        backgroundIcon = new ImageIcon(this.getClass().getResource("loginAndStart/AstreaNew.jpg"));
+        backgroundIcon = new ImageIcon(this.getClass().getResource("/loginAndStart/AstreaNew.jpg"));
         background = new JLabel(backgroundIcon);
-        background.setSize(1920,1080);
+        background.setSize(1280,720);
 
         JButton start = new JButton("START");
-        start.setFont(new Font("Arial",Font.PLAIN, 25));
-        start.setBounds(480,405,400,200);
+        start.setFont(new Font("Arial",Font.BOLD, 40));
+        start.setBounds(320,270,267,133);
+        start.setOpaque(false);
+        start.setContentAreaFilled(false);
+        start.setBorderPainted(false);
+        start.addActionListener(this);
 
 
         JButton options = new JButton("OPTIONS");
-        options.setFont(new Font("Arial",Font.PLAIN, 25));
-        options.setBounds(1040,405,400,200);
+        options.setFont(new Font("Arial",Font.BOLD, 40));
+        options.setBounds(693,270,267,133);
+        options.setOpaque(false);
+        options.setContentAreaFilled(false);
+        options.setBorderPainted(false);
 
 
         JButton help = new JButton("HELP");
-        help.setFont(new Font("Arial",Font.PLAIN, 25));
-        help.setBounds(480,675,400,200);
+        help.setFont(new Font("Arial",Font.BOLD, 40));
+        help.setBounds(320,450,267,133);
+        help.setOpaque(false);
+        help.setContentAreaFilled(false);
+        help.setBorderPainted(false);
         help.addActionListener(this);
 
 
         JButton exit = new JButton("EXIT");
-        exit.setFont(new Font("Arial",Font.PLAIN, 25));
-        exit.setBounds(1040,675,400,200);
+        exit.setFont(new Font("Arial",Font.BOLD, 40));
+        exit.setBounds(693,450,267,133);
+        exit.setOpaque(false);
+        exit.setContentAreaFilled(false);
+        exit.setBorderPainted(false);
         exit.addActionListener(this);
 
 
@@ -63,13 +83,15 @@ public class StartScreen implements ActionListener{
         panel2 = new JPanel();
         panel2.setVisible(true);
 
-        backgroundIcon2 = new ImageIcon(this.getClass().getResource("loginAndStart/AstreaRein.jpg"));
+        backgroundIcon2 = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("/loginAndStart/AstreaRein.jpg")));
         background2 = new JLabel(backgroundIcon2);
-        background2.setSize(1920,1080);
+        background2.setSize(1280,720);
 
         JButton back = new JButton("BACK");
         back.setFont(new Font("Arial",Font.PLAIN, 25));
-        back.setBounds(480,675,400,200);
+        back.setBounds(320,675,400,200);
+        back.setOpaque(false);
+        back.setContentAreaFilled(false);
         back.addActionListener(this);
 
         panel2.add(background2);
@@ -77,7 +99,7 @@ public class StartScreen implements ActionListener{
         panel.setLayout(null);
 
 
-        startScreen.setSize(1920,1080);
+        startScreen.setSize(1280,720);
         startScreen.setVisible(true);
         startScreen.setResizable(false);
         startScreen.setTitle("Astrea's Reincarnation");
@@ -88,23 +110,27 @@ public class StartScreen implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand() == "EXIT") {
+        if(e.getActionCommand().equals("EXIT")) {
             System.exit(0);
         }
-        else if(e.getActionCommand() == "HELP"){
+        else if(e.getActionCommand().equals("HELP")){
 //            panel.setVisible(false);
 //            panel2.setVisible(true);
             startScreen.remove(panel);
             startScreen.add(panel2);
             startScreen.pack();
         }
-        else if(e.getActionCommand() == "BACK"){
+        else if(e.getActionCommand().equals("BACK")){
             startScreen.remove(panel2);
             startScreen.add(panel);
             startScreen.pack();
 //            startScreen.remove(panel2);
 //            startScreen.add(panel);
         }
-
+        else if(e.getActionCommand().equals("START")){
+            gp.stopMusic();
+            startScreen.dispose();
+            mainGame = new MainGame();
+        }
     }
 }

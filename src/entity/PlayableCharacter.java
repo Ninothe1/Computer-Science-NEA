@@ -35,8 +35,6 @@ public class PlayableCharacter extends Entity{
         speed = 4; //how many pixels it moves per interval
         direction = "down"; //default direction its looking
         //set default variable such as players, x and y, speeds and the default direction they look at
-        healthPoints = 100;
-        staminaPoints = 100;
 
     }
     public void getPlayerImage(){
@@ -59,6 +57,7 @@ public class PlayableCharacter extends Entity{
     public static void update(){
         if(gp.upPressed || gp.downPressed || gp.rightPressed || gp.leftPressed){
             if(gp.upPressed == true){
+                System.out.println("W");
                 direction = "up";
             }
             else if(gp.downPressed == true){

@@ -2,15 +2,13 @@ package mainGame;
 
 import battle.BattlePanel;
 import entity.PlayableCharacter;
+import sounds.Sound;
 import tile.TileManager;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.*;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     //SCREEN SETTINGS
@@ -35,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     TileManager tileM = new TileManager(this);
     Thread gameThread;
     public CollisionCheck cCheck = new CollisionCheck(this);
+    Sound sound = new Sound();
 
     public PlayableCharacter player = new PlayableCharacter(this);
 
@@ -60,6 +59,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     public void setUpGame(){
         gameState = fightState;
+        if(gameState == roamState){
+            playMusic(0);
+        }
+        if(gameState == fightState){
+            playMusic(1);
+        }
+
 
     }
 
@@ -111,11 +117,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
     }
     private void update() {
-
         if(gameState == roamState){
             player.update();
         }
-        if(gameState == fightState){
+        else if(gameState == fightState){
             battle.update();
         }
 
@@ -179,6 +184,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                         battle.selected =1;
                     }
                 }
+                else if(battle.win || battle.loose){
+                    enterPressed = true;
+                }
 
 
 
@@ -197,6 +205,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         if(gameState == roamState){
             if(code == KeyEvent.VK_W){
+                System.out.println("W W W W W W RATIO LMAO");
                 upPressed = true;
             }
             else if(code == KeyEvent.VK_A) {
@@ -242,6 +251,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         }
         //key listener listens out for when key is released and does accordingly
 
+    }
+    public void playMusic(int i){
+        sound.setFile(i);
+        sound.start();
+        sound.loop();
+    }
+    public void stopMusic(){
+        sound.stop();
+   }
+    public void playSE(int i){
+        sound.setFile(i);
+        sound.start();
     }
 
 }

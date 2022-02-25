@@ -8,14 +8,13 @@ public class Enemy extends Entity{
     public int action1;
     public int action2;
     public static int[] enemyAttacks = new int[]{15, 10, 12, 6};
-    public static String[] enemyActions = new String[]{"The devious mime squeels and unleashes a wave of dark energy",
-            "The mime aims it's fingers towards you and shoots out `air bullets`",
-            "The mime pulls out an imaginary weapon from it's pockets and slams it in your gut",
-            "The mime pulls farts and the stink damages you" };
+    public static String[] enemyActions = new String[]{"The corrupted mime uses shadow shot",
+            "The corrupted mime uses bite",
+            "The corrupted mime uses shadow fist",
+            "The corrupted mime tooted and the stink damaged you" };
 
     public void setDefaultValues(){
-        healthPoints = 70;
-        staminaPoints = 60;
+
         weakness = "fire";
 
     }
