@@ -22,7 +22,4 @@ public class Entity {
     public Rectangle solidArea;
     public static boolean collisionOn = false;
     public static String weakness;
-
-
-
 }

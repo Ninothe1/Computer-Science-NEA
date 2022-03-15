@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.UIManager.*;
 
 public class LoginScreen implements ActionListener {
     private static JFrame loginScreen;
@@ -22,12 +23,24 @@ public class LoginScreen implements ActionListener {
     public static StartScreen startScreen;
     private static JLabel recognition;
     private static JLabel mainText;
+    public static int exp;
 
 
 
 
 
     public LoginScreen() {
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
+
         loginScreen = new JFrame();
         panel = new JPanel();
 
@@ -119,8 +132,21 @@ public class LoginScreen implements ActionListener {
         loginScreen.setTitle("Welcome to Spirit Drive Primo");
         loginScreen.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         loginScreen.add(panel);
+        loginScreen.setLocationRelativeTo(null);
         //setting window size
     }
+
+    public boolean isAlphanumeric(String str)
+    {
+        char[] charArray = str.toCharArray();
+        for(char c:charArray)
+        {
+            if (!Character.isLetterOrDigit(c))
+                return false;
+        }
+        return true;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Connection con = ConnectionDB.connect();
@@ -142,6 +168,7 @@ public class LoginScreen implements ActionListener {
                 while (rs.next()) {
                     String usernameS = rs.getString("Username");
                     String passwordS = rs.getString("Password");
+                    exp = rs.getInt("Exp");
                     //getting the username and password from the result set
                     if(passwordS.equals(passwordL)){
                         System.out.println("Logged in");
@@ -157,6 +184,7 @@ public class LoginScreen implements ActionListener {
 
             } catch (SQLException d) {
                 System.out.println(d.toString());
+                //catches the exception and prints it
             } finally {
                 try {
                     rs.close();
@@ -190,19 +218,23 @@ public class LoginScreen implements ActionListener {
                 }
                 //checks if the username entered is already in use
                 else if(usernameL == "Enter your username here" && passwordL == "Enter your password here") {
-                    System.out.println("Tap on the boxes to register");
+                    recognition.setText("Tap on the boxes to register");
                 } else if (usernameL == "Enter your username here" && passwordL == "") {
-                    System.out.print("Please put something in the boxes");
+                    recognition.setText("Please put something in the boxes");
                 } else if(usernameL == "" && passwordL == "Enter your password here"){
-                    System.out.println("Please put something in the boxes");
+                    recognition.setText("Please put something in the boxes");
+                }
+                else if(usernameL.length() < 4 || isAlphanumeric(usernameL) == false || usernameL.length() > 10 || passwordL.length() > 10){
+                    recognition.setText("Username doesn't meet the requirements");
                 }
                 //else if's used to check whether the user has actually entered into both boxes
                 else {
-                    sql = "INSERT INTO Login(User,Username,Password) VALUES(?,?,?) ";
+                    sql = "INSERT INTO Login(User,Username,Password,Exp) VALUES(?,?,?,?) ";
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, numberOfUsers);
                     ps.setString(2, usernameL);
                     ps.setString(3, passwordL);
+                    ps.setInt(4,0);
                     ps.execute();
                     recognition.setText("The account has been registered in the system");
                     //inserts the username and password into the database if conditions are met.

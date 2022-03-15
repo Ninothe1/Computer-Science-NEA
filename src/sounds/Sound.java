@@ -7,11 +7,12 @@ import java.net.URL;
 
 public class Sound {
     Clip clip;
+    Clip clip2;
     URL soundURL[] = new URL[30];
 
     public Sound(){
         soundURL[0] = getClass().getResource("/sounds/RoamTheme.wav");
-        soundURL[1] = getClass().getResource("/sounds/MimeBattle.wav");
+        soundURL[1] = getClass().getResource("/sounds/BattleTheme.wav");
         soundURL[2] = getClass().getResource("/sounds/GameIntro.wav");
         soundURL[3] = getClass().getResource("/sounds/DrakeIntro.wav");
         soundURL[4] = getClass().getResource("/sounds/BobbyIntro.wav");
@@ -22,30 +23,43 @@ public class Sound {
         soundURL[9] = getClass().getResource("/sounds/FireFist.wav");
         soundURL[10] = getClass().getResource("/sounds/FrostFist.wav");
         soundURL[11] = getClass().getResource("/sounds/StartScreenMusic.wav");
-
-
-
+        //gets music
     }
     public void setFile(int i){
         try{
-            System.out.println(i);
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();
             clip.open(ais);
+            //gets the music and opens it
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
-    public void start(){
-        clip.start();
-    }
-    public void loop(){
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-    }
-    public void stop(){
-        clip.stop();
+    public void setFile2(int i){
+        try{
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
+            clip2 = AudioSystem.getClip();
+            clip2.open(ais);
+            //gets the music and opens it
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
+    public void start(){
+        clip.start();
+    } //starts music
+    public void start2(){clip2.start();} //starts soundeffect
+    public void loop(){
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    } //loops music
+    public void stop(){
+        clip.stop();
+    } // stops msuic
+    public void stop2(){clip2.stop();} //stops soundeffect
 }
+

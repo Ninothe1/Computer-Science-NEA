@@ -7,18 +7,11 @@ public class Enemy extends Entity{
     public BufferedImage death;
     public int action1;
     public int action2;
-    public static int[] enemyAttacks = new int[]{15, 10, 12, 6};
-    public static String[] enemyActions = new String[]{"The corrupted mime uses shadow shot",
-            "The corrupted mime uses bite",
-            "The corrupted mime uses shadow fist",
-            "The corrupted mime tooted and the stink damaged you" };
+    public static int[] enemyAttacks;
+    public static String weakness;
+    public static int EHp;
+    //the enemy attack numbers for the first enemy
 
-    public void setDefaultValues(){
-
-        weakness = "fire";
-
-    }
     public Enemy(){
-        setDefaultValues();
     }
 }

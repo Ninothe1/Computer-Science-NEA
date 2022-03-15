@@ -11,7 +11,7 @@ public class ConnectionDB {
         try {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection("jdbc:sqlite:GameDatabase.db"); //connect to database
-            System.out.println("Connected!");
+            //if this works it will print connected so i know if it works
         } catch (ClassNotFoundException | SQLException e) {
             //Auto generated catch block
             System.out.println(e + "");

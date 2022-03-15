@@ -1,24 +1,32 @@
 package battle;
 
+import com.mysql.cj.log.Log;
 import entity.Enemy;
 import entity.PlayableCharacter;
+import loginAndStart.ConnectionDB;
+import loginAndStart.LoginScreen;
 import mainGame.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Random;
 
 public class BattlePanel {
     GamePanel gp;
+    PlayableCharacter pc;
     public static Enemy[] enemy;
     public static BufferedImage backgroundIcon;
     public static BufferedImage backPlayer;
     public static BufferedImage backSpirit;
     public static int currentPlayerHP = 100;
-    public static int currentEnemyHP = 70;
+    public static int maxEnemyHP;
+    public static int currentEnemyHP;
     public static int currentPlayerSP = 100;
-    public static int currentEnemySP = 100;
     public int commandNum = 0, commandNum2 = 0, commandNum3 = 0, selected = 0;
     int playerDamage = 0;
     int playerStaminaCon = 0;
@@ -29,9 +37,13 @@ public class BattlePanel {
     boolean turn = true;
     int counter;
     int soundAction;
-    boolean battleActive = true;
+    public static boolean battleActive = true;
     public boolean win = false;
     public boolean loose = false;
+    Random rand = new Random();
+    public int TheEnemy;
+    public static int[] eAttacks;
+
 
 
 
@@ -39,6 +51,7 @@ public class BattlePanel {
         this.gp = gp;
         enemy = new Enemy[10];
         getBattleImages();
+        TheEnemy = rand.nextInt(5);
     }
 
     public void getBattleImages() {
@@ -49,6 +62,48 @@ public class BattlePanel {
 
             enemy[0] = new Enemy();
             enemy[0].image = ImageIO.read(getClass().getResourceAsStream("/battle/MimeMonster.png"));
+            enemy[0].enemyAttacks = new int[]{15, 10, 12, 6};
+            eAttacks = enemy[0].enemyAttacks;
+            enemy[0].weakness = "fire";
+            enemy[0].EHp = 80;
+            maxEnemyHP = enemy[0].EHp;
+            currentEnemyHP = maxEnemyHP;
+
+            enemy[1] = new Enemy();
+            enemy[1].image = ImageIO.read(getClass().getResourceAsStream("/battle/SharkMonster.png"));
+            enemy[1].enemyAttacks = new int[]{25, 5, 6, 7};
+            eAttacks = enemy[1].enemyAttacks;
+            enemy[1].weakness = "ice";
+            enemy[1].EHp = 65;
+            maxEnemyHP = enemy[1].EHp;
+            currentEnemyHP = maxEnemyHP;
+
+            enemy[2] = new Enemy();
+            enemy[2].image = ImageIO.read(getClass().getResourceAsStream("/battle/TongueMonster.png"));
+            enemy[2].enemyAttacks = new int[]{10, 11, 12, 13};
+            eAttacks = enemy[2].enemyAttacks;
+            enemy[2].weakness = "fire";
+            enemy[2].EHp = 90;
+            maxEnemyHP = enemy[2].EHp;
+            currentEnemyHP = maxEnemyHP;
+
+            enemy[3] = new Enemy();
+            enemy[3].image = ImageIO.read(getClass().getResourceAsStream("/battle/ChompMonster.png"));
+            enemy[3].enemyAttacks = new int[]{25, 7, 14, 6};
+            eAttacks = enemy[3].enemyAttacks;
+            enemy[3].weakness = "cold";
+            enemy[3].EHp = 110;
+            maxEnemyHP = enemy[3].EHp;
+            currentEnemyHP = maxEnemyHP;
+
+            enemy[4] = new Enemy();
+            enemy[4].image = ImageIO.read(getClass().getResourceAsStream("/battle/AntlerMonster.png"));
+            enemy[4].enemyAttacks = new int[]{15, 10, 10, 15};
+            eAttacks = enemy[4].enemyAttacks;
+            enemy[4].weakness = "normal";
+            enemy[4].EHp = 100;
+            maxEnemyHP = enemy[4].EHp;
+            currentEnemyHP = maxEnemyHP;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +115,8 @@ public class BattlePanel {
     }
 
     public void draw(Graphics2D g2) {
+
+        int level = LoginScreen.exp / 120;
         if(battleActive) {
             //PLAYER DRAWING
             g2.drawImage(backPlayer, 40, 277, 181, 176, null);
@@ -67,8 +124,9 @@ public class BattlePanel {
 
             //PLAYER HP AND SP
 
-            double healthBar = 160 * ((double) currentPlayerHP / (double) (100));
-            double spBar = 160 * ((double) currentPlayerSP / (double) (100));
+            double healthBar = 160 * ((double) currentPlayerHP / (double) (pc.playerHp + (level*10)));
+            double spBar = 160 * ((double) currentPlayerSP / (double) (pc.playerHp + (level*10)));
+            double expBar = 160 * ((double) LoginScreen.exp/(double) 120);
 
 
             //HP
@@ -83,15 +141,19 @@ public class BattlePanel {
             g2.fillRect(400, 380, 166, 26);
 
             g2.setColor(new Color(30, 0, 255));
-            g2.fillRect(403, 383, 160, 20);
+            g2.fillRect(403, 383, (int) spBar, 20);
+
+            //Experience Bar
+
+            g2.setColor((new Color(10,190,225)));
+            g2.fillRect(400, 413, (int) expBar,3);
 
             //ENEMY DRAWING
-            g2.drawImage(enemy[0].image, 300, 60, 181, 176, null);
+            g2.drawImage(enemy[TheEnemy].image, 300, 60, 181, 176, null);
 
             //ENEMY HP AND SP
 
-            double enemyHealthBar = 160 * ((double) currentEnemyHP / (double) (70));
-            double enemySpBar = 160 * ((double) currentEnemySP / (double) (100));
+            double enemyHealthBar = 160 * ((double) currentEnemyHP / (double) (maxEnemyHP));
 
 
             //HP
@@ -100,13 +162,6 @@ public class BattlePanel {
 
             g2.setColor(new Color(255, 0, 30));
             g2.fillRect(13, 13, (int) enemyHealthBar, 20);
-
-            //SP
-            g2.setColor(new Color(35, 35, 35));
-            g2.fillRect(10, 40, 166, 26);
-
-            g2.setColor(new Color(30, 0, 255));
-            g2.fillRect(13, 43, (int) enemySpBar, 20);
 
             //Player Menu
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
@@ -278,7 +333,7 @@ public class BattlePanel {
                 }
 
                 Random rand = new Random();
-                int enemyAction = rand.nextInt(5);
+                int enemyAction = rand.nextInt(4);
 
                 if (commandNum2 == 1 || commandNum3 == 1) {
                     if (playerDamageType == Enemy.weakness) {
@@ -290,6 +345,8 @@ public class BattlePanel {
                     }
 
                     System.out.println(playerDamage);
+                    playerDamage += pc.levelBonus[level];
+
 
                     currentEnemyHP -= playerDamage;
                     gp.playSE(soundAction);
@@ -300,8 +357,7 @@ public class BattlePanel {
                     System.out.println(currentEnemyHP);
                 }
 
-                enemyDamage = Enemy.enemyAttacks[enemyAction];
-                String enemyActionText = Enemy.enemyActions[enemyAction];
+                enemyDamage = eAttacks[enemyAction];
                 if (enemyAction == 0 || enemyAction == 1 || enemyAction == 2 || enemyAction == 3) {
 
                     if (commandNum == 1) {
@@ -309,10 +365,6 @@ public class BattlePanel {
                     }
                     System.out.println(enemyDamage);
                     currentPlayerHP -= enemyDamage;
-                    while (counter < 15000) {
-                        g2.drawString(enemyActionText, 40, 515);
-                        counter++;
-                    }
                     counter = 0;
                     System.out.println(currentPlayerHP);
                 }
@@ -330,7 +382,6 @@ public class BattlePanel {
                     }
                     battleActive = false;
 
-
                 }
 
             }
@@ -338,23 +389,51 @@ public class BattlePanel {
         }
         else{
             gp.stopMusic();
+            gp.playMusic(0);
+
+            Connection con = ConnectionDB.connect();
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            String sql;
 
             while (gp.enterPressed = false){
                 if(win){
-                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 60F));
-                    String text;
-                    int x;
-                    int y;
-                    text = "YOU WON, YOU GOT 15 XP";
-                    x = 40;
-                    y = 505;
-                    g2.drawString(text, x, y);
-                    commandNum = 0;
-                    commandNum2 = 0;
-                    commandNum3 = 0;
+                    try{
+                        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 60F));
+                        String text;
+                        int x;
+                        int y;
+                        text = "YOU WON, YOU GOT 15 XP";
+                        x = 40;
+                        y = 505;
+                        g2.drawString(text, x, y);
+                        commandNum = 0;
+                        commandNum2 = 0;
+                        commandNum3 = 0;
+                        LoginScreen.exp += 15;
+
+                        sql = "INSERT INTO Login(Exp) VALUES(?) ";
+                        ps = con.prepareStatement(sql);
+                        ps.setInt(1, LoginScreen.exp);
+                        ps.execute();
+
+                    }catch (SQLException d) {
+                        System.out.println(d.toString());
+                    } finally {
+                        try {
+                            rs.close();
+                            ps.close();
+                            con.close();
 
 
+                        } catch (SQLException d) {
+                            System.out.print(d.toString());
+                        }
+                    }
                 }
+
+
+
                 else if(loose){
                     g2.setFont(g2.getFont().deriveFont(Font.BOLD, 60F));
                     String text;
@@ -367,12 +446,25 @@ public class BattlePanel {
                     commandNum = 0;
                     commandNum2 = 0;
                     commandNum3 = 0;
+                    gp.playMusic(0);
+                    gp.stopMusic();
+                    gp.playMusic(1);
 
                 }
 
 
             }
+            Random rand = new Random();
+            TheEnemy = rand.nextInt(5);
+            maxEnemyHP = enemy[TheEnemy].EHp;
+            currentEnemyHP = maxEnemyHP;
 
+            currentPlayerHP = 100 + (level*10);
+            currentPlayerSP = 100 + (level*10);
+
+
+
+            pc.time = 0;
             gp.gameState = 1;
         }
 

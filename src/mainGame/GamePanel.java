@@ -31,13 +31,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     public boolean upPressed = false, downPressed = false, rightPressed = false, leftPressed = false, pPressed = false, enterPressed = false;
 
     TileManager tileM = new TileManager(this);
+    //estantiation of Tile Manager
     Thread gameThread;
     public CollisionCheck cCheck = new CollisionCheck(this);
+    //estantiation of CollisionCheck
     Sound sound = new Sound();
+    //estantiation of Sound
 
     public PlayableCharacter player = new PlayableCharacter(this);
+    //enstatiation of PlayableCharacter class
 
     public BattlePanel battle = new BattlePanel(this);
+    //enstatiation of Battle Panel Class
 
     public int gameState;
     public final int roamState = 1;
@@ -58,12 +63,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     }
 
     public void setUpGame(){
-        gameState = fightState;
+        gameState = roamState;
         if(gameState == roamState){
             playMusic(0);
+            //if i change the state to roam when your on the map walking, it plays this music
         }
         if(gameState == fightState){
             playMusic(1);
+            //if i change the state to fight when your on the battle screen, it plays this music
         }
 
 
@@ -119,9 +126,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private void update() {
         if(gameState == roamState){
             player.update();
+            //calls the update function in player, if the player state is set
         }
         else if(gameState == fightState){
             battle.update();
+            //call the update function in battle, if the fight state is set
         }
 
 
@@ -136,10 +145,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if(gameState == roamState){
             tileM.draw(g2);
             player.draw(g2);
+            //draws the tiles and player
         }
         else if(gameState == fightState){
             battle.drawBackground(g2);
             battle.draw(g2);
+            //draws the bakground and ohter things associated
         }
 
         g2.dispose();
@@ -202,10 +213,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 }
             }
         }
+        //everyone command num, is a layer in the selection, the normal command num are the primary commands
+        //the other command nums are options for every seldction in the normal commands
+        //the entered press is selection
+        //when the fight state is active the key events work
 
         if(gameState == roamState){
             if(code == KeyEvent.VK_W){
-                System.out.println("W W W W W W RATIO LMAO");
                 upPressed = true;
             }
             else if(code == KeyEvent.VK_A) {
@@ -221,6 +235,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                 pPressed = true;
                 System.out.println("P is pressed");
             }
+            //if any of the keys are being pressed it makes the respective boolean true
         }
 
         //key listener listens out for when key is pressed and does accordingly
@@ -233,23 +248,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if(code == KeyEvent.VK_W) {
             upPressed = false;
             PlayableCharacter.spriteNum = 1;
+            //resets the sprite animation
         }
         else if(code == KeyEvent.VK_A) {
             leftPressed = false;
             PlayableCharacter.spriteNum = 1;
+            //resets the sprite animation
         }
         else if(code == KeyEvent.VK_D) {
             rightPressed = false;
             PlayableCharacter.spriteNum = 1;
+            //resets the sprite animation
         }
         else if(code == KeyEvent.VK_S) {
             downPressed = false;
             PlayableCharacter.spriteNum = 1;
+            //resets the sprite animation
         }
         else if(code == KeyEvent.VK_P){
             pPressed = false;
         }
-        //key listener listens out for when key is released and does accordingly
+        //if the key is unpressed it turns off the respective boolean
+
 
     }
     public void playMusic(int i){
@@ -257,14 +277,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         sound.start();
         sound.loop();
     }
+    //this starts and loops the music
     public void stopMusic(){
         sound.stop();
    }
     public void playSE(int i){
-        sound.setFile(i);
-        sound.start();
+        sound.setFile2(i);
+        sound.start2();
     }
 
+    //this starts the music and doesn't loop it as it's a sound effect
 }
 
 

@@ -11,11 +11,13 @@ public class MainGame{
         gameFrame.setTitle("Astrea's Reincarnation");
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setLocationRelativeTo(null);
+        //setting up my games frame
 
         GamePanel gamepanel = new GamePanel();
         gameFrame.add(gamepanel);
         gameFrame.pack();
         gamepanel.requestFocusInWindow();
+        //add my panel to my frame
 
 
         gamepanel.setUpGame();

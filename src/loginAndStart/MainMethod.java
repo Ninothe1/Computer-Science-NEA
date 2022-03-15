@@ -1,5 +1,6 @@
 package loginAndStart;
 
+import mainGame.GamePanel;
 import mainGame.MainGame;
 
 public class MainMethod {

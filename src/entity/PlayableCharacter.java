@@ -1,11 +1,13 @@
 package entity;
 
+import battle.BattlePanel;
 import mainGame.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 public class PlayableCharacter extends Entity{
     static GamePanel gp;
@@ -13,6 +15,9 @@ public class PlayableCharacter extends Entity{
 
     public static int screenX;
     public static int screenY;
+    public static int time;
+    public static int[] levelBonus = {0,0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    public static int playerHp = 100;
 
     public PlayableCharacter(GamePanel gp){
         this.gp = gp;
@@ -57,7 +62,6 @@ public class PlayableCharacter extends Entity{
     public static void update(){
         if(gp.upPressed || gp.downPressed || gp.rightPressed || gp.leftPressed){
             if(gp.upPressed == true){
-                System.out.println("W");
                 direction = "up";
             }
             else if(gp.downPressed == true){
@@ -69,6 +73,7 @@ public class PlayableCharacter extends Entity{
             else if(gp.leftPressed == true){
                 direction = "left";
             }
+            //when something is pressed the direction changes
 
 
 
@@ -89,9 +94,9 @@ public class PlayableCharacter extends Entity{
                     case "right":
                         worldX += speed;
                         break;
-
                 }
             }
+            //if a collision isn't present the person's player moves
         }
 
 
@@ -99,6 +104,7 @@ public class PlayableCharacter extends Entity{
         //when the keys are pressed, the player will move or it's position will change accordingly
         if(gp.upPressed||gp.downPressed||gp.leftPressed||gp.rightPressed){
             spriteCounter++;
+            time++;
             if(spriteCounter > 10){
                 if(spriteNum == 1){
                     spriteNum = 2;
@@ -108,8 +114,19 @@ public class PlayableCharacter extends Entity{
                 }
                 spriteCounter = 0;
             }
+            Random rand = new Random();
+            int randoChance = rand.nextInt(10);
+            if(time > 200 && randoChance == 1){
+                BattlePanel.battleActive = true;
+                gp.stopMusic();
+                gp.playMusic(1);
+                gp.gameState = 2;
+
+            }
+
 
         }
+        //creates a timer, in which they change the sprite num constantly while a button is being pressed in order to allow for a presentation fo animation
 
         //times when the character should transfer between it's primary and secondary animation.
 
@@ -153,11 +170,7 @@ public class PlayableCharacter extends Entity{
                 }
                 break;
         }
+        //if the sprite nums change the picture changes representing animation
         g2.drawImage(image, screenX , screenY , gp.tileSize ,gp.tileSize, null);
-
     }
-
-
-
-
 }
